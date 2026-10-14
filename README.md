@@ -1,5 +1,20 @@
 # ApexTX
 
+> [!IMPORTANT]
+> **This fork: experimental support for the FlySky Noble NB4+**
+>
+> This is a personal fork of [GastonGelhorn/apextx](https://github.com/GastonGelhorn/apextx).
+> It adds a build option `NB4_PLUS_HW` that runs the ApexTX NB4 firmware on the
+> Noble NB4+, based on a comparison of the stock NB4 and NB4+ firmware.
+>
+> **Status: compiles, not yet tested on a real NB4+. Do not flash a radio you rely on.**
+>
+> - What was found and why it should work: [docs/nb4plus/README.md](docs/nb4plus/README.md)
+> - Tool to back up the external flash before installing (simulation only): [tools/nb4plus-nor-reader](tools/nb4plus-nor-reader)
+> - All changes compared with ApexTX: [compare view](https://github.com/GastonGelhorn/apextx/compare/main...Semtexmagix:apextx:nb4plus-hw)
+>
+> Everything below this box is the original ApexTX README.
+
 <p align="center">
   <img src="docs/branding/apextx-logo.png" alt="ApexTX" width="460">
 </p>
