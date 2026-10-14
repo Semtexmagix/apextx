@@ -1,0 +1,15 @@
+[OK ] 4 KiB at 0x000000
+      status=1 jedec=0xef4017 data_ok=True crc_ok=True reads=2 commands=['0x9f', '0x3', '0x3'] (0.5s)
+[OK ] 128 KiB at 0x7E0000 (last chunk)
+      status=1 data_ok=True crc_ok=True (24.3s)
+[OK ] rejects wrong magic
+[OK ] rejects length 0
+[OK ] rejects length > 128 KiB
+[OK ] rejects start beyond 16 MiB
+[OK ] rejects range crosses 16 MiB
+[OK ] no flash detected
+      status=3 jedec=0xffffff commands=['0x9f']
+[OK ] detects read mismatch
+      status=4
+[OK ] reset fallback
+ALL TESTS PASSED

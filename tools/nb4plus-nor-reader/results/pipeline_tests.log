@@ -1,0 +1,23 @@
+[OK ] 2 chunks via simulated DFU: exit 0, data identical=True, 32s
+[OK ] fault "no-start" aborts without a file: exit 1, message seen=True, file written=False
+[OK ] fault "no-chip" aborts without a file: exit 1, message seen=True, file written=False
+[OK ] fault "unstable" aborts without a file: exit 1, message seen=True, file written=False
+[OK ] complete 8 MiB backup: exit 0, 8388608 bytes, identical=True, sha256 25bb6459f9c0442fb819246ad423252985562e2abe1ae97d36f4a1a252a63382, 16.5 min
+iB  (789s)
+   6656 / 8192 KiB  (804s)
+   6784 / 8192 KiB  (820s)
+   6912 / 8192 KiB  (835s)
+   7040 / 8192 KiB  (850s)
+   7168 / 8192 KiB  (866s)
+   7296 / 8192 KiB  (882s)
+   7424 / 8192 KiB  (897s)
+   7552 / 8192 KiB  (913s)
+   7680 / 8192 KiB  (929s)
+   7808 / 8192 KiB  (945s)
+   7936 / 8192 KiB  (962s)
+   8064 / 8192 KiB  (977s)
+   8192 / 8192 KiB  (993s)
+saved <workdir>/full_8mib.bin (8388608 bytes), sha256 25bb6459f9c0442fb819246ad423252985562e2abe1ae97d36f4a1a252a63382
+
+ALL PIPELINE TESTS PASSED
+exit 0

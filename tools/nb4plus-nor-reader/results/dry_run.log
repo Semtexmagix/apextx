@@ -1,0 +1,4 @@
+    $ dfu-util -d 0483:df11 -a 0 -s 0x20007f00:force -D <workdir>/_nor_load.bin
+    $ dfu-util -d 0483:df11 -a 0 -s 0x20008000:leave
+    $ dfu-util -d 0483:df11 -a 0 -s 0x2000ff00:131328:force -U <workdir>/_nor_result.bin
+dry run: the same three calls repeat for every chunk

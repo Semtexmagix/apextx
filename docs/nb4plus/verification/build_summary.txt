@@ -1,0 +1,11 @@
+# Build summary (arm-none-eabi-gcc 14.2.rel1, Release, NB4_PLUS_HW=ON)
+Totals         KB    usage  of ttl	KB free
+  Flash:  1725.91   84.27%    2048	 322.09
+  CCRAM:    54.69   85.46%      64	   9.31
+  SRAM1:    80.53   71.90%     112	  31.47
+  SRAM2:     0.00    0.00%      16	  16.00
+  SRAM3:     0.04    0.05%      64	  63.96
+ SDRAM1:  2948.00   35.99%    8192	5244.00
+
+
+Valid NB4 firmware image: 1636276 application bytes.

@@ -91,6 +91,9 @@ haptic change they match the NB4 build. PJ7/PJ8/PJ13 (telemetry inverter pins
 of the PL18 family) are driven by ApexTX but not by the stock firmware; the
 upstream NB4P target drives them on NB4+ hardware as well.
 
+All checks, tests and their logs are listed in [TEST_RESULTS.md](TEST_RESULTS.md);
+the scripts used for the analysis are in [analysis-tools](analysis-tools).
+
 ## Remaining risk
 
 - The NB4+ RF module itself has not been exercised. The MCU side matches the
