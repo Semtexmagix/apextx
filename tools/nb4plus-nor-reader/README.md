@@ -46,6 +46,19 @@ pip install unicorn
 python test_sim.py dumper.bin
 ```
 
+## PC side and end-to-end test
+
+`dump_nor.py` drives `dfu-util` chunk by chunk (only the two fixed SRAM
+addresses are ever written or read; `--dry-run` prints the exact calls).
+`test_dump_pipeline.py` runs it against `fake_dfu_util.py`, a simulated ROM
+DFU device, including fault injection and (with `--full`) a complete 8 MiB
+backup. Results: [../../docs/nb4plus/TEST_RESULTS.md](../../docs/nb4plus/TEST_RESULTS.md).
+
+```sh
+python dump_nor.py --dry-run
+python test_dump_pipeline.py /tmp/norsim --full
+```
+
 ## Open questions for real hardware
 
 - Whether the NB4+ ROM DFU accepts writes to and uploads from SRAM
@@ -55,5 +68,3 @@ python test_sim.py dumper.bin
 - Whether the jump back into the ROM bootloader re-enumerates cleanly.
 - The SRAM range used by the ROM bootloader (the reader assumes it stays below
   `0x20004000`).
-
-A PC-side script that drives `dfu-util` chunk by chunk is not written yet.

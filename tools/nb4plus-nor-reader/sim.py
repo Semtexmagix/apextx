@@ -81,7 +81,10 @@ class NorModel:
         return 1
 
 
-def run(dumper_bin, nor, start, length, flags=0, magic=0x4E4F5251, max_steps=10**10):
+SRAM_SIZE = 0x30000
+
+
+def run(dumper_bin, nor, start=0, length=0, flags=0, magic=0x4E4F5251, sram=None):
     mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB | UC_MODE_MCLASS)
     mu.ctl_set_cpu_model(UC_CPU_ARM_CORTEX_M4)
     mu.mem_map(0x08000000, 0x200000)       # internal flash (must never be written)
@@ -92,8 +95,13 @@ def run(dumper_bin, nor, start, length, flags=0, magic=0x4E4F5251, max_steps=10*
 
     mu.mem_write(0x1FFF0000, struct.pack('<II', 0x20002000, ROM_STUB | 1))
     mu.mem_write(ROM_STUB, b'\xfe\xe7')    # b .
-    mu.mem_write(LOAD, dumper_bin)
-    mu.mem_write(PARAMS, struct.pack('<IIII', magic, start, length, flags))
+    if sram is not None:
+        # Device-style run: SRAM already holds parameters and program.
+        mu.mem_write(0x20000000, sram)
+        dumper_bin = bytes(mu.mem_read(LOAD, 8))
+    else:
+        mu.mem_write(LOAD, dumper_bin)
+        mu.mem_write(PARAMS, struct.pack('<IIII', magic, start, length, flags))
     mu.mem_write(0x40023808, struct.pack('<I', 0x0000000A))  # CFGR: running on PLL
 
     st = {'cs': 1, 'sck': 0, 'mosi': 0}
@@ -166,4 +174,5 @@ def run(dumper_bin, nor, start, length, flags=0, magic=0x4E4F5251, max_steps=10*
     data = bytes(mu.mem_read(BUFFER, length)) if 0 < length <= 0x20000 else b''
     log['params_magic_after'] = struct.unpack('<I', mu.mem_read(PARAMS, 4))[0]
     log['pins'] = st
+    log['sram'] = bytes(mu.mem_read(0x20000000, SRAM_SIZE))
     return result, data, log
