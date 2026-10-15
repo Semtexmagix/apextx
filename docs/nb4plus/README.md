@@ -109,6 +109,28 @@ upstream NB4P target drives them on NB4+ hardware as well.
   re-flashing the same version could only be checked after a DFU backup of the
   internal flash.
 
+### RF region (CE / FCC) handling in ApexTX
+
+Relevant for regulatory compliance when choosing whether to run this firmware:
+
+- The generic AFHDS3 module settings in ApexTX/EdgeTX offer a CE/FCC region
+  selector and default a new model to FCC (`resetAfhds3Options`,
+  `afhds3.emi = 2`). **This default and selector apply to the generic AFHDS3
+  path, not to the NB4 internal dialect used by this build.**
+- On the `RADIO_NB4` target (the base for `NB4_PLUS_HW`), the region selector is
+  **not shown** and the NB4 config builder (`afhds3_nb4.h`) does **not** send
+  any region/EMI byte to the module. The source states it "preserves the
+  module's stock regional RF data" and deliberately does not expose a region
+  byte as if it controlled these pages.
+- In other words, on the NB4 path ApexTX does not command the module into CE or
+  FCC; the module keeps whatever regional configuration it already has. ApexTX
+  does not force FCC here.
+- **Not verified / for the ApexTX maintainer to confirm:** which region a
+  freshly bound receiver ends up in on an NB4+, since that is determined by the
+  module firmware and the receiver configuration block, not by the transmitter
+  UI. Anyone intending to operate the radio in a specific region should confirm
+  this before use.
+
 All checks, tests and their logs are listed in [TEST_RESULTS.md](TEST_RESULTS.md);
 the scripts used for the analysis are in [analysis-tools](analysis-tools).
 
