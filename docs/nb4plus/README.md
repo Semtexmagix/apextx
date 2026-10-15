@@ -91,6 +91,24 @@ haptic change they match the NB4 build. PJ7/PJ8/PJ13 (telemetry inverter pins
 of the PL18 family) are driven by ApexTX but not by the stock firmware; the
 upstream NB4P target drives them on NB4+ hardware as well.
 
+### Stock firmware variants and updates
+
+- FlySky publishes NB4+ firmware 1.0.22 in four variants (EU and EN, each as
+  standard and FCC). The NOR resource package (images, fonts) is byte-identical
+  in all four; only the application image differs.
+- EU and EN applications have the same size and the same set of language
+  names; their differences are not related to the RF link.
+- The firmware shows the variant itself: the version string ends in `std.` or
+  `FCC`. For use in the EU the standard (CE) variant is the appropriate one.
+  How the region setting interacts with the RF module under ApexTX is still
+  open.
+- The message "The current version is a higher version and no update is
+  required" belongs to the **receiver** update flow of the stock firmware, not
+  to updating the transmitter itself. The PC updater only sends the image over
+  USB HID and contains no version check; whether FlySky's bootloader refuses
+  re-flashing the same version could only be checked after a DFU backup of the
+  internal flash.
+
 All checks, tests and their logs are listed in [TEST_RESULTS.md](TEST_RESULTS.md);
 the scripts used for the analysis are in [analysis-tools](analysis-tools).
 
