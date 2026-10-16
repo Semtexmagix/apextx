@@ -1,8 +1,11 @@
 # Noble NB4+ support (not yet tested on hardware)
 
-> **Status:** analysis done, build compiles and passes static and emulation
-> checks. Nothing here has run on a real NB4+ yet. Do not flash it onto a radio
-> you rely on. Current state and next steps: [STATUS.md](STATUS.md).
+> **Status:** flashed and tested on a real Noble NB4+ (2026-10-16): ApexTX
+> boots, the UI and storage work, and the **internal RF module binds a receiver
+> and drives a servo** (Enhanced PHY mode required). Still experimental – not
+> every function is verified, and switching the UI language to English currently
+> crashes the radio. Back up the internal flash before flashing. Current state,
+> known issues and next steps: [STATUS.md](STATUS.md).
 
 ## What this is about
 

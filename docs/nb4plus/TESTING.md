@@ -188,6 +188,7 @@ touched a receiver.
 | Check | Pass |
 |---|---|
 | Create a new car model, put the receiver into bind mode, bind | ☐ |
+| If binding times out: set the RF **Type/PHY mode to Enhanced** and bind again (an FGr8B bound in Enhanced, not in Classic) | ☐ |
 | Steering and throttle outputs follow the controls in the right direction | ☐ |
 | Failsafe: switch the transmitter off → the car goes to the failsafe state | ☐ |
 | Power-cycle transmitter and receiver → automatic reconnect | ☐ |
