@@ -24,6 +24,11 @@ own update path:
   region setting and does not expose a selector; it keeps whatever region the
   module already has. It does not force CE or FCC. See
   [FINDINGS.md](FINDINGS.md#rf-region-ce--fcc-in-apextx).
+- FlySky's two EU packages (**EU FCC** and **EU STD**) are the **same program**:
+  a byte/instruction comparison of both 1.0.31-4 updaters finds no region
+  constant in the application, and the RF-module and receiver firmware are even
+  byte-identical between them. The region is a runtime/RF-side setting, not a
+  separate firmware. Evidence: [ce-fcc-evidence.md](ce-fcc-evidence.md).
 - **Operate the radio only in the region that is legal where you use it.** This
   is the user's responsibility, exactly as with the stock firmware.
 
