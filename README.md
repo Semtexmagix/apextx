@@ -7,7 +7,7 @@
 > It adds a build option `NB4_PLUS_HW` that runs the ApexTX NB4 firmware on the
 > Noble NB4+, based on a comparison of the stock NB4 and NB4+ firmware.
 >
-> **Status: tested on a real NB4+ (2026-10-16) – ApexTX boots and the internal RF binds a receiver and drives a servo (Enhanced PHY mode). Still experimental; switching the UI language to English currently crashes. Back up the internal flash before flashing.**
+> **Status: tested on a real NB4+ (2026-10-16) – ApexTX boots and the internal RF binds a receiver and drives a servo (Enhanced PHY mode). Still experimental. The earlier English-language power-off is fixed (it was a reentrant page rebuild overflowing the UI stack). Back up the internal flash before flashing.**
 >
 > - Overview and result in short: [docs/nb4plus/README.md](docs/nb4plus/README.md)
 > - Current state, open questions, test plan, how to help: [docs/nb4plus/STATUS.md](docs/nb4plus/STATUS.md)

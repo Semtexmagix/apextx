@@ -51,17 +51,19 @@ firmware over DFU accepts the same version.
 
 ## Known issues
 
-- **Switching the UI language to English crashes the radio** (black screen /
-  reset). A closer look rules out the font path: on the NB4 family English and
-  Spanish share the same font table (`en_fontTable`), so switching does not
-  reload or decompress any font, and both string tables are fully populated (no
-  null strings). The suspect is instead the UI-language switch handler in
-  `gui/colorlcd/radio/radio_setup.cpp` (around the `ALL_LANGS` block), which
-  rebuilds the page reentrantly from inside the Choice callback (`onCancel()` →
-  `QuickMenu::openPage()` → `shutdownQuickMenu()`); on the tight NB4 stack this
-  can fault. Not yet confirmed with a serial fault trace. Likely a general
-  ApexTX issue, not NB4+-specific. Workaround: stay on Spanish, or apply the
-  language on the next reboot instead of rebuilding the page live.
+- **Fixed: switching the UI language to English powered the radio off**
+  (display off, one beep, off - not the orderly shutdown). Confirmed on hardware
+  as a UI-task **stack overflow**: the UI-language handler in
+  `gui/colorlcd/radio/radio_setup.cpp` (the `ALL_LANGS` block) rebuilt the page
+  **reentrantly from inside the Choice value-change callback** (`onCancel()` +
+  `QuickMenu::openPage()`), stacking a full page build on top of the running
+  LVGL event. On the NB4's tight UI stack that overflowed, faulted and dropped
+  the power latch. (The font path was ruled out: English and Spanish share the
+  same `en_fontTable`, so no font is reloaded, and both string tables are fully
+  populated.) The fix defers the rebuild to the next LVGL cycle with
+  `lv_async_call`, so it no longer nests on the event stack. Not NB4+-specific -
+  it is in shared ApexTX code. Remaining (cosmetic): on the NB4's own interface
+  the new language is shown after the next restart, not live.
 - **First filesystem creation can fail an erase-verify** (red error) and then
   succeed on a second attempt. Likely a timing issue during the full-chip
   erase; worth hardening for the NB4+ NOR.
