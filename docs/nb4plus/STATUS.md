@@ -38,6 +38,7 @@ Last update: 2026-10-16
 ## Hardware test plan
 
 Each step only continues if the previous one passed. Steps 1–2 are read-only.
+The detailed step-by-step guide with commands is [TESTING.md](TESTING.md).
 
 | # | Step | Pass criteria |
 |---|---|---|

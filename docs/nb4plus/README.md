@@ -63,6 +63,7 @@ Operate the radio only in the region that is legal where you use it.
 
 | Page | Content |
 |---|---|
+| [TESTING.md](TESTING.md) | Step-by-step guide: backup, flashing, checks, reporting, going back |
 | [STATUS.md](STATUS.md) | What is done, open questions, hardware test plan, how to help, history |
 | [METHOD.md](METHOD.md) | How the findings were obtained, step by step |
 | [FINDINGS.md](FINDINGS.md) | All findings with evidence and certainty |
