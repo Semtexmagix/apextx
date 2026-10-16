@@ -45,14 +45,33 @@ Never flash an image built for another target (`PCBREV=NB4` without
 
 ## 2. Enter ROM DFU
 
-The NB4+ has a DFU button and a hard power-off button; their positions are
-shown in the EdgeTX NB4+ guide:
-[docs/mods/flysky-nb4plus.md](https://github.com/EdgeTX/edgetx/blob/main/docs/mods/flysky-nb4plus.md)
-(the procedure itself is the PL18 one:
-[flashing-flysky-pl18.md](https://github.com/EdgeTX/edgetx/blob/main/docs/mods/flashing-flysky-pl18.md)).
+### The two hidden buttons
+
+Like the PL18, the NB4+ has two hidden buttons under the **left rubber grip**.
+Peel the grip off carefully to reveal them:
+
+- the **DFU button** – puts the radio into STM32 ROM DFU mode when held during
+  power-on;
+- the **hard power-off button** – forces the radio off and is used to leave DFU
+  mode.
+
+The exact positions on the NB4+ are shown with photos in the official EdgeTX
+NB4+ guide (the images are hosted there; this guide links them instead of
+copying them):
+
+- NB4+ DFU and hard power-off button photos:
+  [EdgeTX NB4+ mod guide](https://github.com/EdgeTX/edgetx/blob/main/docs/mods/flysky-nb4plus.md#step-2-flash-edgetx)
+- the general procedure (PL18, with photos of the grip and buttons):
+  [EdgeTX PL18 flashing guide](https://github.com/EdgeTX/edgetx/blob/main/docs/mods/flashing-flysky-pl18.md#preparatory-steps)
+
+> If you have the radio in front of you, adding your own photos of the two
+> buttons here would make this guide clearer for the next person.
+
+### Entering DFU
 
 1. Radio switched off, USB cable connected to the radio only.
-2. Hold the **DFU button** and plug the cable into the computer.
+2. Hold the **DFU button** (upper hidden button) and plug the cable into the
+   computer.
 3. Check that the computer sees the STM32 bootloader:
    - Windows: STM32CubeProgrammer → USB → *Port* shows `USB1` → **Connect** →
      CPU shows *Cortex-M4*.
@@ -101,6 +120,22 @@ The script only writes two fixed SRAM addresses and reads the result back;
 the radio's flash is not written. If it reports an error, nothing is lost –
 continue without this backup or stop. Details:
 [../../tools/nb4plus-nor-reader](../../tools/nb4plus-nor-reader).
+
+**Check that the backup is valid.** The dump itself is read twice with matching
+CRCs, but you can also check the content offline against the official FlySky
+resource package (extract it from the updater you downloaded with
+`docs/nb4plus/analysis-tools/pe_rsrc.py`; the package is the `10_901_1033`
+file):
+
+```sh
+python3 verify_nor.py ~/nb4plus-backup/external-nor-8MiB.bin --resource 10_901_1033
+```
+
+A valid backup reports the official resource package present byte-identical.
+Even stronger: run `dump_nor.py` a second time and compare the two with
+`verify_nor.py --compare`. See
+[../../tools/nb4plus-nor-reader](../../tools/nb4plus-nor-reader) for what this
+can and cannot prove.
 
 ## 5. Flash the NB4+ build
 

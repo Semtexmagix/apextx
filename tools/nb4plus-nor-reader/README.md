@@ -59,6 +59,32 @@ python dump_nor.py --dry-run
 python test_dump_pipeline.py /tmp/norsim --full
 ```
 
+## Verifying a backup (`verify_nor.py`)
+
+A dump is read twice with matching CRCs, but that only proves the read was
+stable and the transfer intact – not that the content is a valid FlySky image.
+`verify_nor.py` checks the content offline (it never touches a radio):
+
+- size and blank/erased detection;
+- the FlySky `0x5A5A` resource header and its 18-byte checksum, the same check
+  the stock firmware does;
+- a byte-for-byte cross-check against the official resource package. Extract it
+  yourself from the FlySky updater you downloaded, using
+  `../../docs/nb4plus/analysis-tools/pe_rsrc.py`; the package is the
+  `10_901_1033` output file (no FlySky file is shipped here);
+- optionally, a comparison of two independent full dumps.
+
+```sh
+python verify_nor.py dump.bin --resource 10_901_1033
+python verify_nor.py dump.bin --compare second_pass.bin
+```
+
+**What it proves:** the shared part (FlySky images/fonts) is byte-identical to
+an independent known-good copy. **What it cannot prove:** the unit-specific
+part (calibration, models) has no external reference, so there only the
+read-twice CRC check applies; and a backup is only fully proven by a successful
+restore, which cannot be rehearsed without writing.
+
 ## Open questions for real hardware
 
 - Whether the NB4+ ROM DFU accepts writes to and uploads from SRAM
