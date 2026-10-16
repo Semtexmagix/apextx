@@ -11,6 +11,7 @@
 >
 > - Overview and result in short: [docs/nb4plus/README.md](docs/nb4plus/README.md)
 > - Current state, open questions, test plan, how to help: [docs/nb4plus/STATUS.md](docs/nb4plus/STATUS.md)
+> - Step-by-step test guide (backup, flash, checks, going back): [docs/nb4plus/TESTING.md](docs/nb4plus/TESTING.md)
 > - How the findings were obtained: [docs/nb4plus/METHOD.md](docs/nb4plus/METHOD.md)
 > - All findings with evidence and certainty: [docs/nb4plus/FINDINGS.md](docs/nb4plus/FINDINGS.md)
 > - All tests and their results: [docs/nb4plus/TEST_RESULTS.md](docs/nb4plus/TEST_RESULTS.md)
