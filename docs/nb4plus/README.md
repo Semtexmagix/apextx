@@ -57,13 +57,16 @@ On the NB4 path ApexTX shows no region selector and sends no region setting to
 the module; the module keeps its existing regional configuration. ApexTX does
 not force FCC there. Which region a newly bound receiver uses on an NB4+ is
 still open – see [FINDINGS.md](FINDINGS.md#rf-region-ce--fcc-in-apextx).
-Operate the radio only in the region that is legal where you use it.
+Operate the radio only in the region that is legal where you use it. How
+regions, the RF module and receiver updates fit together is explained in
+[UPDATES.md](UPDATES.md).
 
 ## Documentation
 
 | Page | Content |
 |---|---|
 | [TESTING.md](TESTING.md) | Step-by-step guide: backup, flashing, checks, reporting, going back |
+| [UPDATES.md](UPDATES.md) | Regions (CE/FCC), RF module and receivers, and what ApexTX does and does not update |
 | [STATUS.md](STATUS.md) | What is done, open questions, hardware test plan, how to help, history |
 | [METHOD.md](METHOD.md) | How the findings were obtained, step by step |
 | [FINDINGS.md](FINDINGS.md) | All findings with evidence and certainty |

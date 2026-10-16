@@ -49,6 +49,14 @@ The detailed step-by-step guide with commands is [TESTING.md](TESTING.md).
 | 5 | Wheels off the ground: bind, steering/throttle, failsafe, reconnect after power cycle | Bind succeeds; outputs follow; failsafe triggers when the transmitter is switched off; automatic reconnect |
 | 6 | Optional: return to stock from the backup | Stock firmware boots; FlySky update and recalibration if needed |
 
+## Possible future work
+
+- **Receiver firmware updates from ApexTX.** ApexTX cannot update FlySky
+  receivers; today that needs a temporary return to stock firmware (see
+  [UPDATES.md](UPDATES.md)). The stock receiver-update exchange could in
+  principle be reverse-engineered the same way the RF link was, but it is a
+  large, risky effort and belongs with the RF-stack maintainer.
+
 ## How to help
 
 - **NB4+ owners willing to test**: follow the plan above and report results in
