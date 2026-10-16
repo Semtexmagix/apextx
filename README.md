@@ -9,7 +9,10 @@
 >
 > **Status: compiles, not yet tested on a real NB4+. Do not flash a radio you rely on.**
 >
-> - What was found and why it should work: [docs/nb4plus/README.md](docs/nb4plus/README.md)
+> - Overview and result in short: [docs/nb4plus/README.md](docs/nb4plus/README.md)
+> - Current state, open questions, test plan, how to help: [docs/nb4plus/STATUS.md](docs/nb4plus/STATUS.md)
+> - How the findings were obtained: [docs/nb4plus/METHOD.md](docs/nb4plus/METHOD.md)
+> - All findings with evidence and certainty: [docs/nb4plus/FINDINGS.md](docs/nb4plus/FINDINGS.md)
 > - All tests and their results: [docs/nb4plus/TEST_RESULTS.md](docs/nb4plus/TEST_RESULTS.md)
 > - Tool to back up the external flash before installing (simulation only): [tools/nb4plus-nor-reader](tools/nb4plus-nor-reader)
 > - All changes compared with ApexTX: [compare view](https://github.com/GastonGelhorn/apextx/compare/main...Semtexmagix:apextx:nb4plus-hw)
