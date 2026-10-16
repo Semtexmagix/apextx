@@ -52,10 +52,16 @@ firmware over DFU accepts the same version.
 ## Known issues
 
 - **Switching the UI language to English crashes the radio** (black screen /
-  reset). The fault is in the font loading when the English font is selected
-  (`gui/colorlcd/fonts.cpp`). Spanish (the factory default) and the Spanish UI
-  are stable. This may well be a general ApexTX issue rather than NB4+-specific
-  and still needs a careful fix. Workaround: stay on Spanish.
+  reset). A closer look rules out the font path: on the NB4 family English and
+  Spanish share the same font table (`en_fontTable`), so switching does not
+  reload or decompress any font, and both string tables are fully populated (no
+  null strings). The suspect is instead the UI-language switch handler in
+  `gui/colorlcd/radio/radio_setup.cpp` (around the `ALL_LANGS` block), which
+  rebuilds the page reentrantly from inside the Choice callback (`onCancel()` →
+  `QuickMenu::openPage()` → `shutdownQuickMenu()`); on the tight NB4 stack this
+  can fault. Not yet confirmed with a serial fault trace. Likely a general
+  ApexTX issue, not NB4+-specific. Workaround: stay on Spanish, or apply the
+  language on the next reboot instead of rebuilding the page live.
 - **First filesystem creation can fail an erase-verify** (red error) and then
   succeed on a second attempt. Likely a timing issue during the full-chip
   erase; worth hardening for the NB4+ NOR.
