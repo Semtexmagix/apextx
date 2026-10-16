@@ -28,7 +28,10 @@ The `NB4_PLUS_HW` build was flashed to a real Noble NB4+ via STM32 ROM DFU
   showed a red error; a second attempt succeeded – see Known issues.)
 - **Internal RF:** the module answers (not "module not responding"), **binds a
   FlySky FGr8B receiver and drives a servo channel end-to-end.** Binding
-  required the **Enhanced** PHY mode; Classic did not bind the FGr8B.
+  required the **Enhanced** PHY mode; Classic did not bind the FGr8B. The
+  **unmodified NB4 RF stack** was used – a separate test with PI8 forced low and
+  one with the stock NB4 value (PI8 high) both bound, so **PI8 polarity does not
+  matter** and no RF code change is needed for the NB4+.
 
 Not yet verified: failsafe behaviour under load, charging from empty, the
 external NOR backup tool on hardware, and whether re-flashing the stock
@@ -56,9 +59,6 @@ firmware over DFU accepts the same version.
 - **First filesystem creation can fail an erase-verify** (red error) and then
   succeed on a second attempt. Likely a timing issue during the full-chip
   erase; worth hardening for the NB4+ NOR.
-- **PI8 on RF enable:** the build sets PI8 low on module enable to match the
-  stock NB4+ firmware. Binding only worked after switching to Enhanced PHY mode,
-  so whether the PI8 change was strictly necessary for binding was not isolated.
 
 ## Open questions (need hardware or maintainer input)
 
@@ -107,4 +107,4 @@ The detailed step-by-step guide with commands is [TESTING.md](TESTING.md).
 | 2026-10-14 | Analysis, `NB4_PLUS_HW` build, NOR reader; fork published; ApexTX issue #8 and EdgeTX discussion #7912 opened |
 | 2026-10-15 | Firmware variants and update flow documented; RF region handling of ApexTX documented |
 | 2026-10-16 | Reply from the author of the EdgeTX NB4+ support; call for testers posted |
-| 2026-10-16 | **First flash on a real NB4+: boots, UI/storage work, internal RF binds an FGr8B and drives a servo (Enhanced PHY mode). PI8 aligned to stock on enable. English language switch found to crash.** |
+| 2026-10-16 | **First flash on a real NB4+: boots, UI/storage work, internal RF binds an FGr8B and drives a servo (Enhanced PHY mode). Isolation test showed PI8 polarity is irrelevant – the unmodified NB4 RF stack binds; the earlier PI8-low change was reverted. English language switch found to crash.** |

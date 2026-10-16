@@ -26,14 +26,7 @@ inline constexpr Nb4QualifiedHardwareProfile kNb4QualifiedHardwareProfile = {
   {
     {
       {Nb4RfSharedLine::Pd11, Nb4RfPinMode::OutputPushPull, Nb4RfLevel::High, 0},
-      // NB4+ enables the module's RF stage with PI8 low, exactly as the stock
-      // NB4+ firmware does; the original NB4 keeps PI8 high.
-      {Nb4RfSharedLine::Pi8, Nb4RfPinMode::OutputPushPull,
-#if defined(RADIO_NB4PLUS_HW)
-       Nb4RfLevel::Low, 0},
-#else
-       Nb4RfLevel::High, 0},
-#endif
+      {Nb4RfSharedLine::Pi8, Nb4RfPinMode::OutputPushPull, Nb4RfLevel::High, 0},
       {},
       {},
       {},

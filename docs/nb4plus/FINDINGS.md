@@ -22,8 +22,8 @@ Firmware versions analysed: NB4+ 1.0.22 (all four variants), NB4 2.0.116.
 | Command set, frame types, mode values 1/2/3 and the configuration sequence (four pages with operation 1 = bind / 2 = update, then an empty apply command) are identical on NB4 and NB4+, and match what ApexTX sends on the NB4. | All calls of the RF request function were listed with their constant frame type and command; mode and operation values read at the call sites. | High |
 | The two 168-byte default receiver blocks are byte-identical on NB4 and NB4+ and equal ApexTX's `nb4DefaultReceiver` except for two fields ApexTX sets at runtime. | Byte-pattern search and byte-by-byte comparison. | High |
 | Module power: on = PD11 high then PI8 low; off = PD11 low, PI8 high. | GPIO helper calls with constant port/pin/level, executed in the power-key start-up state. Same on NB4 and NB4+. | High (that they are switched), Medium (exact role of each pin) |
-| PI8 does not appear critical. | ApexTX keeps PI8 high and works on the NB4, whose stock firmware drives PI8 like the NB4+. | Medium |
-| The NB4+ RF module answers like the NB4 module. | **Confirmed on hardware (2026-10-16): the module answers, binds a FlySky FGr8B and drives a servo end-to-end. Binding required the Enhanced PHY mode; Classic did not bind the FGr8B. PI8 was set low on enable to match stock, but its necessity for binding was not isolated.** | High |
+| PI8 is not critical. | ApexTX keeps PI8 high and works on the NB4. **Confirmed on the NB4+ (2026-10-16): the unmodified NB4 enable sequence (PI8 high) binds a receiver and drives a servo. A build that forced PI8 low behaved the same, so PI8 polarity does not matter and the build keeps the NB4 value.** | High |
+| The NB4+ RF module answers like the NB4 module. | **Confirmed on hardware (2026-10-16): the unmodified NB4 RF stack answers, binds a FlySky FGr8B and drives a servo end-to-end. The only requirement was the Enhanced PHY mode; Classic did not bind the FGr8B. No RF code change is needed for the NB4+.** | High |
 
 ## Board (NB4 vs NB4+)
 
