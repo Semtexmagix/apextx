@@ -1,6 +1,6 @@
 # NB4+ status and roadmap
 
-Last update: 2026-10-16
+Last update: 2026-10-17
 
 ## At a glance
 
@@ -116,3 +116,4 @@ The detailed step-by-step guide with commands is [TESTING.md](TESTING.md).
 | 2026-10-15 | Firmware variants and update flow documented; RF region handling of ApexTX documented |
 | 2026-10-16 | Reply from the author of the EdgeTX NB4+ support; call for testers posted |
 | 2026-10-16 | **First flash on a real NB4+: boots, UI/storage work, internal RF binds an FGr8B and drives a servo (Enhanced PHY mode). Isolation test showed PI8 polarity is irrelevant – the unmodified NB4 RF stack binds; the earlier PI8-low change was reverted. English language switch found to crash.** |
+| 2026-10-17 | Static trace of the stock "RF Standard" path: it is the RF **protocol** selector (AFHDS3/Mini-Z), not a CE/FCC switch; the RF module's command handler in the NOR package is a protected blob, so no transmitter-side region command could be recovered. Open hardware question raised. See [rf-standard-command.md](rf-standard-command.md). |

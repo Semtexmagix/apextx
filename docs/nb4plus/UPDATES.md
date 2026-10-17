@@ -29,6 +29,12 @@ own update path:
   constant in the application, and the RF-module and receiver firmware are even
   byte-identical between them. The region is a runtime/RF-side setting, not a
   separate firmware. Evidence: [ce-fcc-evidence.md](ce-fcc-evidence.md).
+- A static trace of the stock radio confirms the menu called *"RF Standard"* is
+  actually the **RF protocol** selector (AFHDS3/Mini-Z), not a CE/FCC switch,
+  and that the RF module's command handler is a protected blob in the NOR
+  package — so no transmitter-side *"set region"* command could be recovered.
+  Details and the open hardware question in
+  [rf-standard-command.md](rf-standard-command.md).
 - **Operate the radio only in the region that is legal where you use it.** This
   is the user's responsibility, exactly as with the stock firmware.
 
