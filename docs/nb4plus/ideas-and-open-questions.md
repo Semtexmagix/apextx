@@ -4,30 +4,52 @@ A running list so nothing gets lost. Nothing here is implemented unless another
 doc says so. Certainty tags: **High** = read/verified, **Medium** =
 interpretation, **Open** = needs hardware or more work.
 
+## Two active workstreams
+1. **CE/FCC region** — determine whether there is any real region behaviour and,
+   if wanted, provide a CE and an FCC build. Static analysis is exhausted (below);
+   only measurement (ESP USART6 tap, or RF power) can settle "FCC = more range".
+2. **RF module + receiver updater inside ApexTX** — so RF/RX firmware can be
+   updated from ApexTX without returning to stock (section below). This is the
+   solvable, static-analysable one.
+
 ## CE / FCC region — where it stands
-- The stock radio app in **EU FCC** vs **EU STD** builds differs **only by
-  relocation/layout** (a ~72-byte size shift and the resulting pointer/branch
-  adjustments). An aligned binary diff found **no functional constant
-  difference** (no differing TX-power value, region code or config byte); the
-  size changes cluster in the **region/version display code** (near the
-  `%sFCC` / `%sstd.` format strings). **High.**
-- The NOR package (RF-module + receiver firmware) is **byte-identical** between
-  FCC and STD. **High.**
+- **The FCC-vs-STD app difference is now isolated: it is only the region LABEL
+  logic.** In the device-info screen (~`0x0800ae1e`, next to `%sFCC`/`%sstd.`):
+  the **FCC build hardcodes `movs r0,#0x50`** → always shows "FCC"; the **STD
+  build reads the TX-power value** (`config+0x36`) and shows "FCC" only when it
+  equals max (`0x50`=80), else "std". The value only selects the label string.
+  **It is NOT a power or duty limiter.** **High.**
+- **TX-power clamp is identical** in both builds (max `0x50`=80). The rest of the
+  ~76-byte size delta is a separate recompile (different register/stack layout)
+  plus relocation — no functional constant. **High.**
+- The **NOR package (RF-module + receiver firmware) is byte-identical** FCC vs
+  STD (self-verified, not just assumed). **High.**
+- **No hardware region strap / option byte**: the GPIOF access is clock/oscillator
+  init, the `0x1FFFF800` reference is flash management (RDP) — neither is a region
+  selector. Other module GPIO inputs are SX1281 BUSY/DIO + bind button. **High.**
 - The menu labelled "RF Standard" is the **protocol** selector (AFHDS3 1/2-way,
   Mini-Z), not a CE/FCC switch; `config+0x3a` is the UI language. **High.**
+- Module readable radio driver: **fixed 2.4 GHz channel plan** (base reg
+  `0x00b89d8a`), **no `SetTxParams` power command**, **no LBT/CAD**. **High.**
 - The RF module's command handler is **obfuscated** (own 256-byte S-box, reached
-  by one indirect call, no plaintext decryptor). Not statically recoverable. **High.**
-- Interpretation: on this radio the **CE/FCC split looks like a labelling /
-  certification matter, not a transmitter behavioural difference** (2.4 GHz ISM
-  behaviour can be the same under both regimes). **Medium.**
-- Decisive confirmation would need **measurement, not reading**:
-  - a USART6 sniff comparing stock **FCC vs STD** on the wire (see ESP tap), or
-  - an RF spectrum/power measurement (e.g. TinySA Ultra) of FCC vs STD. **Open.**
-- For "two ApexTX builds (CE/FCC)": they would be **cosmetic** (label only)
-  unless we impose a real difference ourselves. The only legitimate behavioural
-  lever ApexTX already has is **TX power** (a CE build could default/cap lower);
-  the stock app has no such constant to copy. Compliance only — never to exceed
-  a local limit. **Open.**
+  by one indirect `blx`, nothing references it as data, no plaintext decryptor).
+  It is **byte-identical for FCC and STD**, so even it cannot distinguish region.
+  A Unicorn emulation-from-reset attempt (does it self-decrypt into RAM?) is the
+  only "make it readable" option — uncertain, since flash cannot self-decrypt
+  in place for execution. **Open.**
+- **Broader field:** `richardclli/Flysky-ELRS` + ELRS FRM301 branches work on the
+  *same* SX128x+STM32F0 module hardware but **replace** it with ELRS, they did not
+  decode AFHDS3; EdgeTX states FlySky's AFHDS3 internal API is deliberately
+  *proprietary/confidential*; multiple AFHDS3-RE requests (DIY-Multiprotocol
+  #231/#314/#1014) were never delivered. The modules are **CE+FCC dual-certified**
+  → the hardware is region-agnostic. **High/Medium.**
+- **Interpretation:** on this radio CE/FCC is a **label/declaration on
+  region-agnostic, dual-certified hardware**; no readable firmware region switch
+  exists anywhere. "FCC = more range" (one forum post) is **not backed by any
+  readable mechanism** — both builds can emit the same max power and share the
+  same module firmware. Only **measurement** could confirm a real difference:
+  an ESP USART6 tap comparing stock FCC vs STD on the wire, or an RF
+  spectrum/power measurement. Never to exceed a local limit. **Medium/Open.**
 
 ## RF module + receiver updater inside ApexTX (wanted feature)
 Goal: bundle the newest RF-module and receiver firmware in ApexTX and flash them
