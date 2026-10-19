@@ -102,8 +102,7 @@
 #define USBD_DFU_VID                        USBD_VID_STM
 #define USBD_DFU_PID                        0xDF11
 #if defined(RADIO_NB4)
-#include "bootloader/nb4_update_id.h"
-#define USBD_DFU_PRODUCT_STRING             NB4_UPDATE_PRODUCT
+#define USBD_DFU_PRODUCT_STRING             "ApexTX NB4 Update"
 #else
 #define USBD_DFU_PRODUCT_STRING             USB_NAME " DFU"
 #endif
