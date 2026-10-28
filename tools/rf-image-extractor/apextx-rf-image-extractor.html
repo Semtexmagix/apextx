@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ApexTX RF Image Extractor</title>
+<style>
+:root{
+  --bg:#0c0d0f; --panel:#141619; --panel2:#181b1f;
+  --line:#23262b; --line2:#333840; --text:#f0f0f0; --muted:#9aa3ad; --muted2:#6b7480;
+  --blue:#20a0f0; --blue2:#54b7f6; --ink:#061320;
+  --orange:#f07020; --orange2:#ffb070; --good:#5fd39a; --bad:#ff8f8f;
+}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:radial-gradient(1150px 540px at 82% -10%,rgba(32,160,240,.16),transparent 60%),radial-gradient(760px 420px at 4% 112%,rgba(240,112,32,.06),transparent 55%),var(--bg);color:var(--text);min-height:100vh;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.page{max-width:860px;margin:0 auto;padding:34px 24px 54px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}
+.brand img{height:84px;width:auto;display:block;filter:drop-shadow(0 6px 22px rgba(32,160,240,.22))}
+.hgroup{display:flex;align-items:center;gap:12px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.09em;background:rgba(32,160,240,.12);border:1px solid rgba(32,160,240,.34);border-radius:999px;padding:7px 12px;color:var(--blue2);white-space:nowrap}
+.lang{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);padding:5px 10px;border-radius:999px;line-height:1}
+.lang button.on{background:var(--blue);color:#05121d}
+h1{font-size:34px;letter-spacing:-1.1px;line-height:1.08;margin:0 0 12px;font-weight:800}
+.intro{color:var(--muted);max-width:620px;margin:0 0 22px;font-size:16px}
+.panel{position:relative;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));padding:22px 24px;border-radius:18px;margin:0 0 16px;box-shadow:0 26px 64px -34px rgba(0,0,0,.85)}
+.panel::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--blue),var(--orange))}
+.panel h2{font-size:15px;margin:0 0 4px;letter-spacing:.02em}
+.panel p.hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+.step{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted2);margin:0 0 8px}
+.btn{all:unset;cursor:pointer;font-weight:700;font-size:13px;padding:10px 14px;border-radius:10px;border:1px solid var(--line2);background:#1b1e23;color:var(--text);display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--blue)}
+.btn:disabled,.btn.off{opacity:.45;pointer-events:none}
+.btn.primary{background:linear-gradient(180deg,var(--blue2),var(--blue));color:var(--ink);border-color:transparent;box-shadow:0 12px 28px -12px rgba(32,160,240,.7);font-size:15px;padding:12px 20px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.drop{display:block;border:1.5px dashed var(--line2);border-radius:12px;padding:16px;cursor:pointer;color:var(--muted);font-size:14px;text-align:center}
+.drop:hover{border-color:var(--blue)}
+.drop b{color:var(--blue2)}
+.picked{color:var(--good);font-size:13px;margin-top:10px;word-break:break-all}
+select{background:#0f1113;border:1px solid var(--line2);border-radius:9px;color:var(--text);font:inherit;padding:9px 11px;min-width:240px;max-width:100%}
+.destrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.results{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px}
+.results li{display:flex;align-items:center;gap:10px;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;background:rgba(255,255,255,.015);font-size:13.5px}
+.results .mod{background:rgba(32,160,240,.06);border-color:rgba(32,160,240,.3)}
+.results b{font-weight:700}
+.results .k{font-size:10.5px;font-weight:700;letter-spacing:.06em;border-radius:999px;padding:3px 8px;flex:none}
+.results .k.rf{background:rgba(240,112,32,.12);border:1px solid rgba(240,112,32,.4);color:var(--orange2)}
+.results .k.rx{background:rgba(32,160,240,.12);border:1px solid rgba(32,160,240,.4);color:var(--blue2)}
+.results .v{color:var(--muted);margin-left:auto;white-space:nowrap}
+.warn{background:rgba(240,112,32,.09);border:1px solid rgba(240,112,32,.34);border-radius:10px;padding:10px 13px;font-size:13px;color:var(--orange2);margin-top:12px;display:none}
+.warn.on{display:block}
+.status{font-size:13px;color:var(--good);min-height:18px;margin:12px 0 0}
+.status.bad{color:var(--bad)}
+.busy{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.busy.on{display:flex}
+.busy .box{position:relative;width:min(460px,100%);border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));padding:24px;border-radius:18px;box-shadow:0 26px 64px -20px rgba(0,0,0,.9)}
+.busy .box::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--blue),var(--orange))}
+.busy b{display:block;font-size:17px;margin:0 0 4px}
+.busy progress{appearance:none;-webkit-appearance:none;width:100%;height:10px;margin:16px 0 11px;display:block;border:0;background:transparent}
+.busy progress::-webkit-progress-bar{background:#23272d;border-radius:999px}
+.busy progress::-webkit-progress-value{background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px;transition:width .3s}
+.busy p{margin:0;font-size:14px;color:var(--muted)}
+.busy .done{display:none;margin-top:14px;padding:12px 14px;border:1px solid rgba(95,211,154,.4);background:rgba(95,211,154,.08);border-radius:11px;color:var(--good);font-size:14px}
+.busy .btn{margin-top:16px;display:none}
+footer{font-size:12px;color:var(--muted2);margin:24px 2px 0;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <div class="brand"><img src="__LOGO_DATA__" alt="ApexTX"></div>
+  <div class="hgroup">
+    <div class="lang"><button data-lang="en">EN</button><button data-lang="es">ES</button><button data-lang="de">DE</button></div>
+    <div class="tag">NOBLE&nbsp;NB4 / NB4+</div>
+  </div>
+</header>
+
+<h1 data-t="title">RF Image Extractor</h1>
+<p class="intro" data-t="intro">Unpack the RF module and receiver firmware from your own FlySky updater and copy it to the radio, ready for an in-radio update in ApexTX.</p>
+
+<div class="panel">
+  <div class="step" data-t="step1">STEP 1</div>
+  <h2 data-t="s1title">Your FlySky updater</h2>
+  <p class="hint" data-t="s1hint">Choose the FlySky Noble NB4/NB4+ updater you downloaded from FlySky. Nothing is uploaded; it is only unpacked on this PC.</p>
+  <label class="drop"><input type="file" accept=".exe" id="file" hidden><span data-t="choose">Choose updater (.exe)</span></label>
+  <div class="picked" id="picked"></div>
+</div>
+
+<div class="panel">
+  <div class="step" data-t="step2">STEP 2</div>
+  <h2 data-t="s2title">Destination</h2>
+  <p class="hint" data-t="s2hint">Pick the radio's USB storage (connect it in ApexTX under System &gt; USB), or a local folder.</p>
+  <div class="destrow">
+    <select id="target"></select>
+    <button class="btn" id="refresh" data-t="refresh">Refresh</button>
+  </div>
+</div>
+
+<div class="row">
+  <button class="btn primary" id="go" data-t="extract">Extract images</button>
+</div>
+<div class="status" id="status"></div>
+<ul class="results" id="results"></ul>
+
+<footer>
+  <span data-t="foot">ApexTX RF Image Extractor v__VERSION__ — contains no FlySky files; you provide your own updater. The unpacked images are FlySky's and must not be redistributed.</span>
+</footer>
+</div>
+
+<div class="busy" id="busy"><div class="box">
+  <b data-t="working">Extracting…</b>
+  <progress id="prog" max="100" value="10"></progress>
+  <p id="busymsg" data-t="unpacking">Unpacking the firmware images…</p>
+  <div class="done" id="done"></div>
+  <button class="btn primary" id="close" data-t="close">Close</button>
+</div></div>
+
+<script>
+const TOKEN = new URLSearchParams(location.search).get('token') || '';
+const T = {
+  en:{title:"RF Image Extractor",intro:"Unpack the RF module and receiver firmware from your own FlySky updater and copy it to the radio, ready for an in-radio update in ApexTX.",step1:"STEP 1",s1title:"Your FlySky updater",s1hint:"Choose the FlySky Noble NB4/NB4+ updater you downloaded from FlySky. Nothing is uploaded; it is only unpacked on this PC.",choose:"Choose updater (.exe)",step2:"STEP 2",s2title:"Destination",s2hint:"Pick the radio's USB storage (connect it in ApexTX under System > USB), or a local folder.",refresh:"Refresh",extract:"Extract images",working:"Extracting…",unpacking:"Unpacking the firmware images…",close:"Close",foot:"ApexTX RF Image Extractor v__VERSION__ — contains no FlySky files; you provide your own updater. The unpacked images are FlySky's and must not be redistributed.",nofile:"Choose your FlySky updater first.",folder:"Folder",radio:"radio storage",done:n=>`Done — ${n} images copied. You can unplug the radio.`},
+  de:{title:"RF-Image-Extraktor",intro:"Entpackt die Firmware von RF-Modul und Empfängern aus deiner eigenen FlySky-Updater-Kopie und legt sie auf den Sender – bereit für ein Update direkt in ApexTX.",step1:"SCHRITT 1",s1title:"Dein FlySky-Updater",s1hint:"Wähle den FlySky-Noble-NB4/NB4+-Updater, den du bei FlySky geladen hast. Es wird nichts hochgeladen, nur hier am PC entpackt.",choose:"Updater wählen (.exe)",step2:"SCHRITT 2",s2title:"Ziel",s2hint:"Wähle den USB-Speicher des Senders (in ApexTX unter System > USB verbinden) oder einen lokalen Ordner.",refresh:"Aktualisieren",extract:"Images entpacken",working:"Entpacke…",unpacking:"Firmware-Images werden entpackt…",close:"Schließen",foot:"ApexTX RF-Image-Extraktor v__VERSION__ — enthält keine FlySky-Dateien; du bringst deinen eigenen Updater mit. Die entpackten Images gehören FlySky und dürfen nicht weitergegeben werden.",nofile:"Wähle zuerst deinen FlySky-Updater.",folder:"Ordner",radio:"Sender-Speicher",done:n=>`Fertig — ${n} Images kopiert. Du kannst den Sender abstecken.`},
+  es:{title:"Extractor de imágenes RF",intro:"Descomprime el firmware del módulo RF y de los receptores desde tu propio actualizador FlySky y lo copia a la emisora, listo para actualizar desde ApexTX.",step1:"PASO 1",s1title:"Tu actualizador FlySky",s1hint:"Elige el actualizador FlySky Noble NB4/NB4+ que descargaste de FlySky. No se sube nada; solo se descomprime en este PC.",choose:"Elegir actualizador (.exe)",step2:"PASO 2",s2title:"Destino",s2hint:"Elige el almacenamiento USB de la emisora (conéctalo en ApexTX en Sistema > USB) o una carpeta local.",refresh:"Actualizar",extract:"Extraer imágenes",working:"Extrayendo…",unpacking:"Descomprimiendo las imágenes de firmware…",close:"Cerrar",foot:"ApexTX Extractor de imágenes RF v__VERSION__ — no contiene archivos de FlySky; tú aportas tu propio actualizador. Las imágenes extraídas son de FlySky y no deben redistribuirse.",nofile:"Elige primero tu actualizador FlySky.",folder:"Carpeta",radio:"almacenamiento de la emisora",done:n=>`Listo — ${n} imágenes copiadas. Puedes desconectar la emisora.`},
+};
+let lang = 'en', fileBytes = null;
+function applyLang(){
+  const d = T[lang];
+  document.querySelectorAll('[data-t]').forEach(el=>{const v=d[el.dataset.t]; if(typeof v==='string') el.textContent=v;});
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on', b.dataset.lang===lang));
+  document.documentElement.lang = lang;
+}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;applyLang();renderTargets();});
+
+async function api(path, opts){
+  const r = await fetch(path + (path.includes('?')?'&':'?') + 'token=' + encodeURIComponent(TOKEN), opts);
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+let targets = [];
+async function loadTargets(){ try{ targets = (await api('/api/targets')).targets || []; }catch(e){ targets = []; } renderTargets(); }
+function renderTargets(){
+  const sel = document.getElementById('target'); const d = T[lang];
+  sel.innerHTML = '';
+  targets.forEach(t=>{
+    const o = document.createElement('option'); o.value = t.path;
+    o.textContent = t.path + (t.radio ? '  ('+d.radio+')' : '  ('+d.folder+')');
+    sel.appendChild(o);
+  });
+}
+document.getElementById('refresh').onclick = loadTargets;
+
+const fileInput = document.getElementById('file');
+fileInput.onchange = ()=>{
+  const f = fileInput.files[0]; if(!f){ fileBytes=null; return; }
+  const r = new FileReader();
+  r.onload = ()=>{ fileBytes = r.result; document.getElementById('picked').textContent = '✓ ' + f.name; };
+  r.readAsArrayBuffer(f);
+};
+
+function toBase64(buf){
+  let bin=''; const b=new Uint8Array(buf), chunk=0x8000;
+  for(let i=0;i<b.length;i+=chunk) bin += String.fromCharCode.apply(null, b.subarray(i,i+chunk));
+  return btoa(bin);
+}
+
+document.getElementById('go').onclick = async ()=>{
+  const d = T[lang], status = document.getElementById('status');
+  status.className='status'; status.textContent='';
+  if(!fileBytes){ status.className='status bad'; status.textContent=d.nofile; return; }
+  const target = document.getElementById('target').value;
+  const busy = document.getElementById('busy'), done = document.getElementById('done'), close = document.getElementById('close');
+  done.style.display='none'; close.style.display='none'; busy.classList.add('on');
+  document.getElementById('prog').value = 30;
+  try{
+    const res = await api('/api/extract', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({updater: toBase64(fileBytes), target})});
+    document.getElementById('prog').value = 100;
+    document.getElementById('busymsg').textContent = res.folder;
+    done.textContent = d.done(res.images.length); done.style.display='block';
+    close.style.display='inline-flex';
+    const ul = document.getElementById('results'); ul.innerHTML='';
+    res.images.forEach(im=>{
+      const li=document.createElement('li'); if(im.kind==='rf-module') li.className='mod';
+      const k=document.createElement('span'); k.className='k '+(im.kind==='rf-module'?'rf':'rx'); k.textContent=im.kind==='rf-module'?'RF':'RX';
+      const name=document.createElement('b'); name.textContent = im.name || ('ID '+im.id);
+      const v=document.createElement('span'); v.className='v'; v.textContent='v'+im.version+'  ·  '+(im.size/1024|0)+' KB';
+      li.append(k, name, v); ul.appendChild(li);
+    });
+    status.className='status'; status.textContent = d.done(res.images.length);
+  }catch(e){
+    busy.classList.remove('on');
+    status.className='status bad'; status.textContent = e.message;
+  }
+};
+document.getElementById('close').onclick = ()=>document.getElementById('busy').classList.remove('on');
+
+applyLang(); loadTargets();
+</script>
+</body>
+</html>
